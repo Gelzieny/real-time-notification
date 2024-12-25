@@ -57,11 +57,11 @@ $ python -m venv venv && venv\Scripts\activate && pip install -r requirements.tx
 # No Linux/Mac 
 $ python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
 
-# Criar na raiz do projeto mysql_data
-$ mkdir mysql_data
+# Se ao rodar o comando anterior e de erro execurtar os seguintes comandos para atualizar os pacotes
 
-# Rodar o docker-compose
-$ docker-compose up -d
+$ pip install --upgrade pip
+$ pip install --upgrade setuptools
+$ pip install --upgrade wheel
 ````
 ### Executando o  flask shell
 
