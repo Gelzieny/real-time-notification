@@ -3,7 +3,8 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from flask import Flask, jsonify
+from datetime import datetime, timedelta
+from flask import Flask, jsonify, request
 from repository.database import db
 from db_models.payment import Payment
 
@@ -22,7 +23,22 @@ db.init_app(app)
 
 @app.route('/payments/pix', methods=['POST'])
 def create_payment_pix():
-  return jsonify({"message": "The payment has been created"})
+  data = request.get_json()
+
+  if 'value' not in data:
+    return jsonify({"message": "invalid value"}), 400
+
+  expiration_date = datetime.now() + timedelta(minutes=30)
+
+  new_payment = Payment(value=data['value'], expiration_date=expiration_date)
+
+  db.session.add(new_payment)
+  db.session.commit()
+
+  return jsonify({
+    "message": "The payment has been created",
+    "payment": new_payment.to_dict(),
+  })
 
 
 @app.route('/payments/pix/confirmation', methods=['POST'])
