@@ -9,20 +9,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css' )}}" />
 
   <title>Pagamento</title>
 </head>
 
 <body>
+  {% if payment %}
   <main>
     <header>
       <div id="qr-code">
-        <img src="./img/qrcode.png" alt="QR Code" />
+        <img src="{{ url_for('static', filename='template_img/qrcode.png' )}}" alt="QR Code" />
 
-
-        <img id="confirmed-icon" src="./img/check.svg" alt="Ícone de pagamento confirmado" />
-
+        <img id="confirmed-icon" src="{{ url_for('static', filename='template_img/check.svg' )}}"
+          alt="Ícone de pagamento confirmado" />
       </div>
 
       <aside>
@@ -32,28 +32,28 @@
         </p>
 
         <div id="purchase-value">
-          <img src="./img/tag.svg" alt="Ícone de tag" />
-          <span>Compra de R$ <strong id="amount">287,90</strong></span>
+          <img src="{{ url_for('static', filename='template_img/tag.svg' )}}" alt="Ícone de tag" />
+          <span>Compra de R$ <strong id="amount">{{ payment.value }}</strong></span>
         </div>
       </aside>
     </header>
 
     <footer>
       <div id="expiration-time">
-        <img src="./img/currency.svg" alt="Ícone moeda" />
+        <img src="{{ url_for('static', filename='template_img/currency.svg' )}}" alt="Ícone moeda" />
         <span>Recebemos a confirmação do pagamento do seu pedido via pix!</span>
       </div>
-
 
       <div id="order">
         <small>O número do seu pedido é</small>
         <div>
-          <img src="./img/basket.svg" alt="Ícone do pedido" />
-          <span>527485022</span>
+          <img src="{{ url_for('static', filename='template_img/basket.svg' )}}" alt="Ícone do pedido" />
+          <span>{{ payment.id }}</span>
         </div>
       </div>
     </footer>
   </main>
+  {% endif %}
 </body>
 
 </html>

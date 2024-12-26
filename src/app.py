@@ -80,6 +80,7 @@ def confirmation_pix():
 
   payment.paid = True
   db.session.commit()
+  socketio.emit('payment-confirmed', {"bank_payment_id": payment.bank_payment_id})
 
   return jsonify({"message": "O pagamento foi confirmado"})
 
@@ -93,6 +94,12 @@ def payment_pix_page(payment_id):
   if payment.qr_code is None:
     return jsonify({"message": "QR Code não gerado para este pagamento."}), 404
 
+  if not payment:
+    return render_template('404.html', payment=payment)
+  
+  if payment.paid:
+    return render_template('confirmed_payment.html', payment=payment)
+  
   host = "http://127.0.0.1:5000"
   qr_code_url = f"payments/pix/qr_code/{payment.qr_code}"
 
