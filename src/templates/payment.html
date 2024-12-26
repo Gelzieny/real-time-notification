@@ -84,24 +84,24 @@
       const countdownElement = document.getElementById('countdown');
 
       function updateCountdown() {
-        const now = new Date(); // Tempo atual
-        const expirationDate = new Date(expirationTime); // Convertendo a string em objeto Date
-        const timeLeft = expirationDate - now; // Diferença em milissegundos
+        const now = new Date(); 
+        const expirationDate = new Date(expirationTime); 
+        const timeLeft = expirationDate - now;
 
         if (timeLeft <= 0) {
           countdownElement.textContent = "Expirado";
-          // Aqui você pode remover o QR Code ou desativar a funcionalidade
+
           document.getElementById('qr-code-container').style.opacity = "0.5";
           return;
         }
 
-        const minutes = Math.floor(timeLeft / 60000); // Milissegundos para minutos
-        const seconds = Math.floor((timeLeft % 60000) / 1000); // Restante para segundos
+        const minutes = Math.floor(timeLeft / 60000); 
+        const seconds = Math.floor((timeLeft % 60000) / 1000); 
         countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
       }
 
-      updateCountdown(); // Atualiza imediatamente
-      setInterval(updateCountdown, 1000); // Atualiza a cada segundo
+      updateCountdown(); 
+      setInterval(updateCountdown, 1000); 
     }
 
     startCountdown(expiresAt);
