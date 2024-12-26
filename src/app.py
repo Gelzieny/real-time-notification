@@ -25,8 +25,11 @@ db.init_app(app)
 def create_payment_pix():
   data = request.get_json()
 
-  if 'value' not in data:
-    return jsonify({"message": "invalid value"}), 400
+  if 'value' not in data or not isinstance(data['value'], (int, float)):
+    return jsonify({"message": "O campo 'value' é inválido ou ausente."}), 400
+
+  if data['value'] <= 0:
+    return jsonify({"message": "O campo 'value' deve ser maior que zero."}), 400
 
   expiration_date = datetime.now() + timedelta(minutes=30)
 
@@ -36,7 +39,7 @@ def create_payment_pix():
   db.session.commit()
 
   return jsonify({
-    "message": "The payment has been created",
+    "message": "O pagamento foi criado com sucesso.",
     "payment": new_payment.to_dict(),
   })
 
