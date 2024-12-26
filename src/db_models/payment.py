@@ -10,3 +10,13 @@ class Payment(db.Model):
 
   def __repr__(self):
     return f'<Payment {self.username}>'
+
+  def to_dict(self):
+    return {
+      "id": self.id,
+      "value": self.value,
+      "paid": self.paid,
+      "bank_payment_id": self.bank_payment_id,
+      "qr_code": self.qr_code,
+      "expiration_date": self.expiration_date.strftime('%d/%m/%Y %H:%M:%S')
+    }
