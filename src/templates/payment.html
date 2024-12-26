@@ -15,10 +15,11 @@
 </head>
 
 <body>
+  {% if payment %}
   <main>
     <header>
       <div id="qr-code">
-        <img src="{{ url_for('static', filename='template_img/qrcode.png' )}}" alt="QR Code" />
+        <img src="{{ host }}/{{url}}" alt="QR Code" />
       </div>
 
       <aside>
@@ -30,7 +31,7 @@
 
         <div id="purchase-value">
           <img src="{{ url_for('static', filename='template_img/tag.svg' )}}" alt="Ícone de tag" />
-          <span>Compra de R$ <strong id="amount">287,90</strong></span>
+          <span>Compra de R$ <strong id="amount">{{ payment.value }}</strong></span>
         </div>
       </aside>
     </header>
@@ -41,7 +42,7 @@
           <small>Este QR Code expira em</small>
           <div>
             <img src="{{ url_for('static', filename='template_img/clock.svg' )}}" alt="Ícone relógio" />
-            <span>30 minutos</span>
+            <span>{{ payment.expiration_date }} minutos</span>
           </div>
         </header>
 
@@ -52,11 +53,12 @@
         <small>O número do seu pedido é</small>
         <div>
           <img src="{{ url_for('static', filename='template_img/basket.svg' )}}" alt="Ícone do pedido" />
-          <span>527485022</span>
+          <span>{{ payment.id }}</span>
         </div>
       </div>
     </footer>
   </main>
+  {% endif %}
 </body>
 
 </html>

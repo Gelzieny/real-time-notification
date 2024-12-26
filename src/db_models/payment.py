@@ -9,7 +9,7 @@ class Payment(db.Model):
   expiration_date = db.Column(db.DateTime)
 
   def __repr__(self):
-    return f'<Payment {self.username}>'
+    return f'<Payment {self.id}>'
 
   def to_dict(self):
     return {

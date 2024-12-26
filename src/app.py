@@ -40,7 +40,7 @@ def create_payment_pix():
   data_payment_pix = pix_obj.create_payment()
 
   new_payment.bank_payment_id = data_payment_pix['bank_payment_id']
-  new_payment.qr_code_path = data_payment_pix['qr_code_path']
+  new_payment.qr_code = data_payment_pix['qr_code_path']
 
   db.session.add(new_payment)
   db.session.commit()
@@ -68,9 +68,19 @@ def confirmation_pix():
 
 @app.route('/payments/pix/<int:payment_id>', methods=['GET'])
 def payment_pix_page(payment_id):
-  return render_template('payment.html')
+  payment = Payment.query.get(payment_id)
+    
+  if payment is None:
+    return jsonify({"message": "Pagamento não encontrado."}), 404
+  
+  if payment.qr_code is None:
+    return jsonify({"message": "QR Code não gerado para este pagamento."}), 404
 
+  print(payment.qr_code)
+  host = "http://127.0.0.1:5000"
+  qr_code_url = f"payments/pix/qr_code/{payment.qr_code}"
 
+  return render_template('payment.html', payment=payment, host=host, url=qr_code_url)
 
 
 if __name__ == '__main__':
