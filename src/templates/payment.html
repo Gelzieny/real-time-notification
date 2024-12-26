@@ -42,7 +42,7 @@
           <small>Este QR Code expira em</small>
           <div>
             <img src="{{ url_for('static', filename='template_img/clock.svg' )}}" alt="Ícone relógio" />
-            <span>{{ payment.expiration_date }} minutos</span>
+            <span id="countdown"> minutos</span>
           </div>
         </header>
 
@@ -77,6 +77,34 @@
         location.reload();
       }
     });
+
+    const expiresAt = '{{ expiration_date }}'
+
+    function startCountdown(expirationTime) {
+      const countdownElement = document.getElementById('countdown');
+
+      function updateCountdown() {
+        const now = new Date(); // Tempo atual
+        const expirationDate = new Date(expirationTime); // Convertendo a string em objeto Date
+        const timeLeft = expirationDate - now; // Diferença em milissegundos
+
+        if (timeLeft <= 0) {
+          countdownElement.textContent = "Expirado";
+          // Aqui você pode remover o QR Code ou desativar a funcionalidade
+          document.getElementById('qr-code-container').style.opacity = "0.5";
+          return;
+        }
+
+        const minutes = Math.floor(timeLeft / 60000); // Milissegundos para minutos
+        const seconds = Math.floor((timeLeft % 60000) / 1000); // Restante para segundos
+        countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      }
+
+      updateCountdown(); // Atualiza imediatamente
+      setInterval(updateCountdown, 1000); // Atualiza a cada segundo
+    }
+
+    startCountdown(expiresAt);
   </script>
 </body>
 

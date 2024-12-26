@@ -89,25 +89,28 @@ def payment_pix_page(payment_id):
   payment = Payment.query.get(payment_id)
     
   if payment is None:
-    return jsonify({"message": "Pagamento não encontrado."}), 404
+    return render_template('404.html', payment=payment)
   
   if payment.qr_code is None:
     return jsonify({"message": "QR Code não gerado para este pagamento."}), 404
 
-  if not payment:
-    return render_template('404.html', payment=payment)
-  
   if payment.paid:
     return render_template('confirmed_payment.html', payment=payment)
   
   host = "http://127.0.0.1:5000"
   qr_code_url = f"payments/pix/qr_code/{payment.qr_code}"
 
-  return render_template('payment.html', payment=payment, host=host, url=qr_code_url)
+  return render_template('payment.html', payment=payment, host=host, 
+                         url=qr_code_url, expiration_date=payment.expiration_date)
 
 @socketio.on('connect')
 def handle_connect():
   print("Client connected to the server")
+
+
+@socketio.on('connect')
+def handle_disconnect():
+  print("Client has disconnected to the server")
 
 if __name__ == '__main__':
   with app.app_context():
