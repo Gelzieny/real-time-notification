@@ -4,7 +4,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, abort
 from repository.database import db
 from db_models.payment import Payment
 from payments.pix import Pix
@@ -51,6 +51,15 @@ def create_payment_pix():
     "qr_code_path": data_payment_pix['qr_code_path']
   })
 
+@app.route('/payments/pix/qr_code/<file_name>', methods=['GET'])
+def get_image(file_name):
+  file_path = os.path.join(os.getcwd(), "src", "static", "img", f"{file_name}.png")
+  
+  if not os.path.exists(file_path):
+    print(f"Arquivo não encontrado: {file_path}")  # Para debugar
+    abort(404, description="Arquivo não encontrado")
+  
+  return send_file(file_path, mimetype='image/png')
 
 @app.route('/payments/pix/confirmation', methods=['POST'])
 def confirmation_pix():
