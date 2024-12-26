@@ -65,7 +65,23 @@ def get_image(file_name):
 
 @app.route('/payments/pix/confirmation', methods=['POST'])
 def confirmation_pix():
-  return jsonify({"message": "The payment has been confirmed"})
+  data = request.get_json()
+
+  if "bank_payment_id" not in data and "value" not in data:
+    return jsonify({"message": "Dados do pagamento inválidos"}), 400
+
+  payment = Payment.query.filter_by(bank_payment_id=data.get("bank_payment_id")).first()
+
+  if not payment or payment.paid:
+    return jsonify({"message": "Pagamento não encontrado ou já confirmado"}), 404
+
+  if data.get("value") != payment.value:
+    return jsonify({"message": "Valor do pagamento inválido"}), 400
+
+  payment.paid = True
+  db.session.commit()
+
+  return jsonify({"message": "O pagamento foi confirmado"})
 
 @app.route('/payments/pix/<int:payment_id>', methods=['GET'])
 def payment_pix_page(payment_id):
@@ -81,7 +97,6 @@ def payment_pix_page(payment_id):
   qr_code_url = f"payments/pix/qr_code/{payment.qr_code}"
 
   return render_template('payment.html', payment=payment, host=host, url=qr_code_url)
-
 
 @socketio.on('connect')
 def handle_connect():
