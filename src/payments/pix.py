@@ -1,3 +1,4 @@
+import os
 import uuid
 import qrcode
 
@@ -5,7 +6,8 @@ import qrcode
 class Pix:
 
   def __init__(self) -> None:
-    pass
+    self.output_dir = os.path.join("src", "static", "img")
+    os.makedirs(self.output_dir, exist_ok=True)
 
   def create_payment(self):
     bank_payment_id = uuid.uuid4()
@@ -14,9 +16,11 @@ class Pix:
 
     img = qrcode.make(hash_payment)
 
-    img.save(f"static/img/qr_code_payment_{bank_payment_id}.png")
+    file_path = os.path.join(self.output_dir, f"qr_code_payment_{bank_payment_id}.png")
+
+    img.save(file_path)
 
     return {
-      "bank_payment_id":  bank_payment_id,
-      "qr_code_path": f"qr_code_payment_{bank_payment_id}",
+      "bank_payment_id": str(bank_payment_id),
+      "qr_code_path": file_path,
     }
