@@ -4,7 +4,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, request, send_file, abort
+from flask import Flask, jsonify, request, send_file, abort, render_template
 from repository.database import db
 from db_models.payment import Payment
 from payments.pix import Pix
@@ -68,7 +68,9 @@ def confirmation_pix():
 
 @app.route('/payments/pix/<int:payment_id>', methods=['GET'])
 def payment_pix_page(payment_id):
-  return 'pagamento pix'
+  return render_template('payment.html')
+
+
 
 
 if __name__ == '__main__':
